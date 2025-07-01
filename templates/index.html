@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Optimizer</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    :root {
+      --primary-color: #0066cc;
+      --secondary-color: #003366;
+      --accent-color: #ff9900;
+      --light-bg: #f5f7f9;
+      --dark-text: #333;
+      --light-text: #fff;
+      --border-radius: 8px;
+      --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    body {
+      background-color: var(--light-bg);
+      color: var(--dark-text);
+      line-height: 1.6;
+      padding: 0;
+      margin: 0;
+    }
+    
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+    
+    header {
+      background-color: var(--primary-color);
+      color: var(--light-text);
+      padding: 1.5rem 0;
+      text-align: center;
+      margin-bottom: 2rem;
+      border-bottom: 4px solid var(--accent-color);
+    }
+    
+    header h1 {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    header p {
+      font-size: 1rem;
+      opacity: 0.9;
+    }
+    
+    .card {
+      background-color: white;
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+    
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+      color: var(--secondary-color);
+    }
+    
+    input[type="text"],
+    input[type="password"] {
+      width: 100%;
+      padding: 0.8rem;
+      border: 1px solid #ddd;
+      border-radius: var(--border-radius);
+      font-size: 1rem;
+      transition: border-color 0.3s;
+    }
+    
+    input[type="text"]:focus,
+    input[type="password"]:focus {
+      border-color: var(--primary-color);
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.2);
+    }
+    
+    button {
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      border-radius: var(--border-radius);
+      padding: 0.8rem 1.5rem;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    button:hover {
+      background-color: var(--secondary-color);
+    }
+    
+    button i {
+      margin-right: 0.5rem;
+    }
+    
+    .result-section {
+      margin-top: 2rem;
+    }
+    
+    .result-section h3 {
+      color: var(--secondary-color);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+    }
+    
+    .result-section h3 i {
+      margin-right: 0.5rem;
+      color: var(--accent-color);
+    }
+    
+    pre {
+      background-color: #f0f0f0;
+      padding: 1rem;
+      border-radius: var(--border-radius);
+      overflow-x: auto;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      border-left: 4px solid var(--accent-color);
+    }
+    
+    .loading {
+      display: none;
+      text-align: center;
+      margin: 1rem 0;
+    }
+    
+    .loading i {
+      color: var(--primary-color);
+      font-size: 2rem;
+    }
+    
+    footer {
+      text-align: center;
+      margin-top: 2rem;
+      padding: 1rem 0;
+      color: #666;
+      font-size: 0.9rem;
+    }
+    
+    @media (max-width: 768px) {
+      .container {
+        padding: 1rem;
+      }
+      
+      header {
+        padding: 1rem 0;
+      }
+      
+      .card {
+        padding: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1><i class="fas fa-key"></i> The Optimizer</h1>
+    <p>AWS Temporary Credentials Generator</p>
+  </header>
+  
+  <div class="container">
+    <div class="card">
+      <form id="credsForm">
+        <div class="form-group">
+          <label for="access_key"><i class="fas fa-id-card"></i> AWS Access Key:</label>
+          <input type="text" id="access_key" placeholder="Enter your AWS access key" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="secret_key"><i class="fas fa-lock"></i> AWS Secret Key:</label>
+          <input type="password" id="secret_key" placeholder="Enter your AWS secret key" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="role_arn"><i class="fas fa-user-shield"></i> IAM Role ARN:</label>
+          <input type="text" id="role_arn" placeholder="arn:aws:iam::123456789012:role/example-role" required>
+        </div>
+        
+        <button type="submit"><i class="fas fa-cogs"></i> Generate Credentials</button>
+      </form>
+      
+      <div class="loading" id="loading">
+        <i class="fas fa-spinner fa-spin"></i>
+        <p>Generating credentials...</p>
+      </div>
+    </div>
+    
+    <div class="result-section card" id="resultCard" style="display: none;">
+      <h3><i class="fas fa-check-circle"></i> Generated Credentials</h3>
+      <pre id="result"></pre>
+    </div>
+  </div>
+  
+  <footer>
+    <p>&copy; 2025 The Optimizer - Secure AWS Credential Management</p>
+  </footer>
+
+  <script>
+    document.getElementById('credsForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+      
+      // Show loading indicator
+      document.getElementById('loading').style.display = 'block';
+      document.getElementById('resultCard').style.display = 'none';
+
+      const access_key = document.getElementById('access_key').value;
+      const secret_key = document.getElementById('secret_key').value;
+      const role_arn = document.getElementById('role_arn').value;
+
+      try {
+        const response = await fetch('/generate_temp_creds', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ access_key, secret_key, role_arn })
+        });
+
+        const result = await response.json();
+        
+        // Hide loading and show result
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('resultCard').style.display = 'block';
+        document.getElementById('result').innerText = JSON.stringify(result, null, 2);
+      } catch (error) {
+        // Handle errors
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('resultCard').style.display = 'block';
+        document.getElementById('result').innerText = `Error: ${error.message}`;
+      }
+    });
+  </script>
+</body>
+</html>
