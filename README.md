@@ -37,22 +37,7 @@ The Optimizer is a lightweight web application that allows users to generate tem
 1. Clone the repository:
    ```bash
    git clone <repository-url>
-   cd my-app
    ```
-
-2. Create a virtual environment and install dependencies:
-   ```bash
-   python -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
-   pip install -r requirements.txt
-   ```
-
-3. Run the application:
-   ```bash
-   python app.py
-   ```
-
-4. Access the application at http://localhost:5000
 
 ### Docker Deployment
 
@@ -62,6 +47,9 @@ The Optimizer is a lightweight web application that allows users to generate tem
    ```
 
 2. Access the application at http://localhost:3000
+
+<img width="1496" alt="image" src="https://github.com/user-attachments/assets/b454ed5f-51b4-4eb0-87c6-6a0ce81a40ee" />
+
 
 ## Usage
 
@@ -81,7 +69,7 @@ The Optimizer is a lightweight web application that allows users to generate tem
 ## Project Structure
 
 ```
-my-app/
+aws-temp-creds-generator/
 ├── app.py                 # Flask application
 ├── docker-compose.yaml    # Docker Compose configuration
 ├── dockerfile             # Docker build instructions
@@ -108,7 +96,9 @@ To modify the application:
 
 ## License
 
-[MIT License](LICENSE)
+This project is licensed under the [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0) - an OSI-approved open source license that provides an express grant of patent rights from contributors to users.
+
+You can freely use, modify, distribute, and sell this software under the terms of the Apache 2.0 license.
 
 ## Contributing
 
